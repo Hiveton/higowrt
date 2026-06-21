@@ -16,6 +16,7 @@
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
 
 / {
 	model = "Hiveton H5000M";
@@ -244,4 +245,24 @@
 &wed0 {
 	compatible = "mediatek,wed0", "syscon";
 	pci_slot_map = <0>;
+};
+
+/*
+ * Vendor HNAT engine (PPE). The proprietary warp driver's
+ * warp_get_wdma_port() calls hnat_get_wdma_rx_port()/_tx_port(), which are
+ * function pointers the mtkhnat module only sets once its platform driver
+ * probes (hnat_probe -> hnat_enable_hook). 6.12 mainline carries no vendor
+ * HNAT node, so without this node mtkhnat never probes, the pointers stay
+ * NULL, and warp jumps to 0x0 and panics during Wi-Fi init. Node mirrors
+ * the immortalwrt mt7987-netsys.dtsi hnat@15000000 (reg is the PPE window
+ * at 0x15100000, shared with the eth frame engine).
+ */
+&soc {
+	hnat: hnat@15000000 {
+		compatible = "mediatek,mtk-hnat_v5";
+		reg = <0 0x15100000 0 0x80000>;
+		interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>;
+		resets = <&ethsys 0>;
+		reset-names = "mtketh";
+	};
 };
