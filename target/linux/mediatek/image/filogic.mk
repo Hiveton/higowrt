@@ -2214,20 +2214,18 @@ define Device/hiveton_h5000m
   DEVICE_VENDOR := Hiveton
   DEVICE_MODEL := H5000M
   DEVICE_DTS := mt7987a-hiveton-h5000m
-  DEVICE_DTS_OVERLAY := mt7987a-rfb-emmc mt7987a-rfb-eth1-i2p5g
   DEVICE_DTS_DIR := ../dts
   DEVICE_DTC_FLAGS := --pad 4096
-  DEVICE_DTS_LOADADDR := 0x4ff00000
-  DEVICE_PACKAGES := mt7987-2p5g-phy-firmware kmod-sfp blkid e2fsprogs mkf2fs
-  KERNEL_LOADADDR := 0x40000000
-  KERNEL := kernel-bin | gzip
+  DEVICE_PACKAGES := mt7987-2p5g-phy-firmware kmod-sfp blkid e2fsprogs f2fsck mkf2fs
+  KERNEL_LOADADDR := 0x40080000
+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
   KERNEL_INITRAMFS := kernel-bin | lzma | \
 	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
-  IMAGES := sysupgrade.itb
-  KERNEL_INITRAMFS_SUFFIX := .itb
+  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
   IMAGE_SIZE := $$(shell expr 64 + $$(CONFIG_TARGET_ROOTFS_PARTSIZE))m
-  IMAGE/sysupgrade.itb := append-kernel | fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-with-rootfs | pad-rootfs | append-metadata
-  # TODO: add eMMC preloader/bl31-uboot.fip ARTIFACTS once mt7987 emmc u-boot config is confirmed
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  BOARD_NAME := hiveton,h5000m
+  SUPPORTED_DEVICES := hiveton,h5000m hiveton-h5000m
 endef
 TARGET_DEVICES += hiveton_h5000m
 

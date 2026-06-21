@@ -1,17 +1,21 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
  * Hiveton H5000M (MT7987A + MT7992 Wi-Fi 7), eMMC boot.
- * Ported to OpenWrt 25.12 (kernel 6.12) DT-overlay style, modeled on
- * mt7987a-rfb.dts. Hiveton-specific: model/compatible, Wi-Fi GPIO LEDs,
- * PWM fan. Ethernet via reused rfb eth overlays (see filogic.mk).
+ * OpenWrt 25.12 (kernel 6.12).
  *
- * NOTE: ethernet PHY/port topology inherited from the rfb i2p5g overlay;
- * confirm against H5000M schematic and adjust DEVICE_DTS_OVERLAY if needed.
+ * Include-style device tree: the eMMC and Ethernet nodes are inlined into
+ * the base dtb (rather than carried as DT overlays) so the kernel FIT holds
+ * a single, self-contained dtb. This matches the immortalwrt 6.6 H5000M
+ * image layout, so the eMMC-resident U-Boot (web recovery updater) accepts
+ * the resulting sysupgrade-tar (.bin) firmware. Bootloader (bl2/u-boot/gpt)
+ * lives in its own eMMC partitions and is left untouched by sysupgrade.
  */
 
 /dts-v1/;
 #include "mt7987a.dtsi"
 #include <dt-bindings/input/input.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
 
 / {
 	model = "Hiveton H5000M";
@@ -23,6 +27,16 @@
 			    pci=pcie_bus_perf \
 			    root=PARTLABEL=rootfs rootwait \
 			    rootfstype=squashfs,f2fs";
+		rootdisk-emmc = <&emmc_rootfs>;
+	};
+
+	reg_3p3v: regulator-3p3v {
+		compatible = "regulator-fixed";
+		regulator-name = "fixed-3.3V";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-boot-on;
+		regulator-always-on;
 	};
 
 	gpio-keys {
@@ -43,20 +57,6 @@
 		};
 	};
 
-	/* use pwm0 as led: shared with fan/pwm_rgb */
-	pwm_led {
-		pinctrl-names = "default";
-		pinctrl-0 = <&pwm_pins>;
-		status = "okay";
-
-		led {
-			pwms = <&pwm 0 50000 0>;
-			max-brightness = <255>;
-			active-low;
-			linux,default-trigger = "default-on";
-		};
-	};
-
 	gpio-leds {
 		compatible = "gpio-leds";
 
@@ -72,13 +72,111 @@
 	};
 };
 
-&fan {
-	compatible = "pwm-fan";
-	#cooling-cells = <2>;
-	cooling-levels = <0 10 20 30 40 50 60 70 80 90 100 110 120
-			  130 140 150 160 170 180 190 200 210 220 240 255>;
-	pwms = <&pwm 1 50000 0>;
+/* eMMC shares pins with spi1 on MT7987; disable spi1. */
+&spi1 {
+	status = "disabled";
+};
+
+&mmc0 {
+	pinctrl-names = "default", "state_uhs";
+	pinctrl-0 = <&mmc_pins_default>;
+	pinctrl-1 = <&mmc_pins_uhs>;
+	bus-width = <8>;
+	max-frequency = <48000000>;
+	cap-mmc-highspeed;
+	vmmc-supply = <&reg_3p3v>;
+	non-removable;
 	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	card@0 {
+		compatible = "mmc-card";
+		reg = <0>;
+
+		block {
+			compatible = "block-device";
+
+			partitions {
+				block-partition-env {
+					partname = "ubootenv";
+
+					nvmem-layout {
+						compatible = "u-boot,env";
+					};
+				};
+
+				block-partition-factory {
+					partname = "factory";
+
+					nvmem-layout {
+						compatible = "fixed-layout";
+						#address-cells = <1>;
+						#size-cells = <1>;
+
+						eeprom_factory_0: eeprom@0 {
+							reg = <0x0 0x1e00>;
+						};
+					};
+				};
+
+				emmc_rootfs: block-partition-production {
+					partname = "production";
+				};
+			};
+		};
+	};
+};
+
+/*
+ * Ethernet:
+ *   gmac0 - external 2.5G PHY (phy@1, 2500base-x via SGMII PCS)
+ *   gmac1 - built-in 2.5G PHY (phy@15, internal)
+ *   gmac2 - HNAT internal port (fixed-link 2.5G)
+ */
+&gmac0 {
+	phy-mode = "2500base-x";
+	phy-handle = <&phy1>;
+	status = "okay";
+};
+
+&gmac1 {
+	phy-mode = "internal";
+	phy-handle = <&phy15>;
+	status = "okay";
+};
+
+&gmac2 {
+	phy-mode = "internal";
+	label = "hnat";
+	status = "okay";
+
+	fixed-link {
+		speed = <2500>;
+		full-duplex;
+		pause;
+	};
+};
+
+&mdio {
+	phy1: phy@1 {
+		compatible = "ethernet-phy-ieee802.3-c45";
+		reg = <1>;
+		reset-assert-us = <100000>;
+		reset-deassert-us = <100000>;
+		reset-gpios = <&pio 42 GPIO_ACTIVE_LOW>;
+		interrupts = <41 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-parent = <&pio>;
+		realtek,aldps-enable;
+	};
+
+	phy15: phy@15 {
+		pinctrl-names = "i2p5gbe-led";
+		pinctrl-0 = <&i2p5gbe_led0_pins>;
+		compatible = "ethernet-phy-ieee802.3-c45";
+		reg = <15>;
+		phy-mode = "internal";
+	};
 };
 
 &i2c0 {
@@ -90,16 +188,27 @@
 &pcie0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pcie0_pins>;
+	num-lanes = <1>;
 	status = "okay";
 };
 
 &pcie1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pcie1_pins>;
+	num-lanes = <1>;
 	status = "okay";
 };
 
 &pwm {
+	status = "okay";
+};
+
+&fan {
+	compatible = "pwm-fan";
+	#cooling-cells = <2>;
+	cooling-levels = <0 10 20 30 40 50 60 70 80 90 100 110 120
+			  130 140 150 160 170 180 190 200 210 220 240 255>;
+	pwms = <&pwm 1 50000 0>;
 	status = "okay";
 };
 

@@ -109,15 +109,24 @@ make -j$(nproc)
 ```
 
 编译产物在 `bin/targets/mediatek/filogic/`：
-- `*-squashfs-sysupgrade.itb` — 正式刷写
-- `*-initramfs*.itb` — 内存启动调试（首刷建议先用它验证）
+- `*-squashfs-sysupgrade.bin` — 正式刷写（OpenWrt sysupgrade tar 格式，U-Boot Web 更新器接受）
+- `*-initramfs-recovery.itb` — 内存启动调试（首刷建议先用它验证）
 
 ---
 
 ## 六、刷机
 
-1. 串口（115200 8N1）进 U-Boot，TFTP 加载 `initramfs.itb` 内存启动验证驱动；
-2. 确认 WiFi/网口正常后，`sysupgrade -n` 刷 `sysupgrade.itb` 到 eMMC/NAND。
+H5000M（eMMC）固件为 OpenWrt sysupgrade tar 格式（`*-squashfs-sysupgrade.bin`），与设备上
+原 immortalwrt / U-Boot 布局一致：bl2 / u-boot / gpt 为独立分区，sysupgrade 只更新
+kernel + rootfs 分区，**不触碰 bootloader**。
+
+**方式 A：U-Boot Web 恢复更新器（推荐）**
+1. 设备断电，按住 reset 上电进入 U-Boot web failsafe；
+2. 浏览器打开恢复页面，上传 `*-squashfs-sysupgrade.bin`，等待写入完成后重启。
+
+**方式 B：串口 + 内存启动验证**
+1. 串口（115200 8N1）进 U-Boot，TFTP 加载 `*-initramfs-recovery.itb` 内存启动验证驱动；
+2. 确认 WiFi / 网口正常后，系统内 `sysupgrade -n *-squashfs-sysupgrade.bin` 刷入 eMMC。
 
 WiFi 配置走标准 OpenWrt UCI：编辑 `/etc/config/wireless` 后 `wifi up`。
 
