@@ -473,6 +473,9 @@ else
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7992/rebb/MT7992_MT7976_MT7977_EEPROM_BE7200_ePAeLNA_midFEM.bin $(1)/lib/firmware/.
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7992/rebb/MT7992_MT7975_MT7977_EEPROM_BE7200_2i5e_sky_nonlinear.bin $(1)/lib/firmware/.
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7992/rebb/MT7991_MT7976_EEPROM_BE5040_iPAiLNA.bin $(1)/lib/firmware/.
+	# HiGoWRT: 用 SDK 自带 5040 iPA 校准作 driver e2p (无 per-device 校准,
+	# 避免 'EEPROM in Flash is wrong' 降级导致 physical_dev not ready)
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7992/rebb/MT7991_MT7976_EEPROM_BE5040_iPAiLNA.bin $(1)/lib/firmware/e2p
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7992/rebb/MT7991_MT7976_EEPROM_BE5040_ePAeLNA.bin $(1)/lib/firmware/.
 	if [ -d "$(PKG_BUILD_DIR)/wifi_driver" ]; then \
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/wifi_driver/tools/fw_parser/get_consys_log.sh $(1)/etc/wireless/mediatek/; \
