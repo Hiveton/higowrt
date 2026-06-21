@@ -1,0 +1,28 @@
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -1082,6 +1082,17 @@ err_setup:
+ 	return err;
+ }
+ 
++static void __maybe_unused mtk_pcie_shutdown(struct platform_device *pdev)
++{
++	struct mtk_gen3_pcie *pcie = platform_get_drvdata(pdev);
++	u32 val;
++
++	val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
++	val |= PCIE_PE_RSTB;           
++	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
++
++	mdelay(100);
++}
+ static int mtk_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1259,6 +1270,7 @@ MODULE_DEVICE_TABLE(of, mtk_pcie_of_matc
+ 
+ static struct platform_driver mtk_pcie_driver = {
+ 	.probe = mtk_pcie_probe,
++	
+ 	.remove_new = mtk_pcie_remove,
+ 	.driver = {
+ 		.name = "mtk-pcie-gen3",

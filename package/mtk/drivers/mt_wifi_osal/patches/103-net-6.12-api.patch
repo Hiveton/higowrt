@@ -1,0 +1,38 @@
+--- a/mt_osal_net.c
++++ b/mt_osal_net.c
+@@ -10,6 +10,7 @@
+ #include <linux/timekeeping.h>
+ #include <net/cfg80211.h>
+ #include <linux/skbuff.h>
++#include <linux/vmalloc.h>
+ #include <linux/debugfs.h>
+ #include <linux/idr.h>
+ #include <linux/device.h>
+@@ -133,7 +134,7 @@
+ 
+ 	if (ifNameIdx < 32) {
+ 		*ioctl_if = ifNameIdx;
+-		strlcpy(&net_dev->name[0], &desiredName[0], sizeof(net_dev->name));
++		strscpy(&net_dev->name[0], &desiredName[0], sizeof(net_dev->name));
+ 		return true;
+ 	} else {
+ 		MT_DEBUG_TRACE(
+@@ -550,7 +551,7 @@
+ 	/* find a available interface name, max 32 interfaces */
+ 	if (!add_suffix) {
+ 		memset(&net_dev->name[0], 0, IFNAMSIZ);
+-		strlcpy(&net_dev->name[0], name_prefix, sizeof(net_dev->name));
++		strscpy(&net_dev->name[0], name_prefix, sizeof(net_dev->name));
+ 	} else {
+ 		status = mt_os_net_dev_request_name(
+ 			mc_row_id, ioctl_if, net_dev, name_prefix, dev_num, auto_suffix);
+@@ -699,7 +700,8 @@
+ 
+ int mt_init_dummy_netdev(struct net_device *dev)
+ {
+-	return init_dummy_netdev(dev);
++	init_dummy_netdev(dev);
++	return 0;
+ }
+ EXPORT_SYMBOL(mt_init_dummy_netdev);
+ 

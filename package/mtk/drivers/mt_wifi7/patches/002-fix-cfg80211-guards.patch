@@ -1,0 +1,26 @@
+--- a/mt_wifi/include/common/security/sec_cmm.h
++++ b/mt_wifi/include/common/security/sec_cmm.h
+@@ -11,7 +11,7 @@
+ 
+ #include "security/owe_cmm.h"
+ 
+-#ifdef SUPP_SAE_SUPPORT
++#if defined(DOT11_SAE_SUPPORT) || defined(SUPP_SAE_SUPPORT)
+ #include "security/sae_cmm.h"
+ #endif
+ 
+--- a/mt_wifi/feature/map/map.c
++++ b/mt_wifi/feature/map/map.c
+@@ -1357,10 +1357,10 @@
+ 	int cmd_len)
+ {
+ 	INT ifIndex;
+-#ifdef CONFIG_STA_SUPPORT
++#ifdef APCLI_CFG80211_SUPPORT
+ 	BOOLEAN apcliEn;
+ 	PSTA_ADMIN_CONFIG pApCliEntry;
+-#endif /* CONFIG_STA_SUPPORT */
++#endif /* APCLI_CFG80211_SUPPORT */
+ 	struct DOT11_H *pDot11h = NULL;
+ 	BSS_STRUCT *pMbss = NULL;
+ 

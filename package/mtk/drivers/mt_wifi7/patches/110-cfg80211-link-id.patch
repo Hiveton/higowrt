@@ -1,0 +1,11 @@
+--- a/mt_wifi/feature/hostapd_wds/hostapd_wds.c
++++ b/mt_wifi/feature/hostapd_wds/hostapd_wds.c
+@@ -293,7 +293,7 @@
+ 	MTWF_DBG(pAd, DBG_CAT_AP, CATAP_HOSTAPD_WDS, DBG_LVL_NOTICE,
+ 				" null data frame from %02x:%02x:%02x:%02x:%02x:%02x, wdev->if_dev[%s]\n",
+ 				PRINT_MAC(Addr), wdev->if_dev->name);
+-	if (!cfg80211_rx_unexpected_4addr_frame(wdev->if_dev, Addr, GFP_ATOMIC))
++	if (!cfg80211_rx_unexpected_4addr_frame(wdev->if_dev, Addr, -1, GFP_ATOMIC))
+ 		MTWF_DBG(NULL, DBG_CAT_AP, CATAP_HOSTAPD_WDS, DBG_LVL_ERROR,
+ 				"Forward 4addr null data fail\n");
+ }

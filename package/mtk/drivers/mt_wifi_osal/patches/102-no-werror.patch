@@ -1,0 +1,11 @@
+--- a/Makefile
++++ b/Makefile
+@@ -6,7 +6,7 @@
+ 
+ ccflags-y += -I$(src)/inc
+ GLOBAL_INCLUDES_NL80211 = include/uapi/linux/mtk_nl80211_inc
+-ccflags-y += -I$(GLOBAL_INCLUDES_NL80211) -Werror
++ccflags-y += -I$(GLOBAL_INCLUDES_NL80211)
+ 
+ ifeq ($(CONFIG_FUZZ_SUPPORT),y)
+ ccflags-y += -D__MOCK

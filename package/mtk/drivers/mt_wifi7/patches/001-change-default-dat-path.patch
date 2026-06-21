@@ -1,0 +1,24 @@
+diff -u -r a/mt_wifi/include/cmm_cmd.h b/mt_wifi/include/cmm_cmd.h
+--- a/mt_wifi/include/cmm_cmd.h	2025-09-19 10:14:58.000000000 +0800
++++ b/mt_wifi/include/cmm_cmd.h	2026-01-24 00:52:51.843654344 +0800
+@@ -113,7 +113,7 @@
+ 	/* PHY ICS */
+ 	CMDTHRED_PHY_ICS_DUMP_RAW_DATA,
+ #endif /* PHY_ICS_SUPPORT */
+-#ifdef WIFI_SPECTRUM_SUPPORT
++#if 1
+ 	/* WIFI-SPECTRUM */
+ 	CMDTHRED_WIFISPECTRUM_DUMP_RAW_DATA,
+ #endif /* WIFI_SPECTRUM_SUPPORT */
+diff -u -r a/mt_wifi/os/linux/rt_profile.c b/mt_wifi/os/linux/rt_profile.c
+--- a/mt_wifi/os/linux/rt_profile.c	2025-09-19 10:14:30.000000000 +0800
++++ b/mt_wifi/os/linux/rt_profile.c	2026-01-24 00:58:48.683699258 +0800
+@@ -439,7 +439,7 @@
+ }
+ 
+ static struct l1profile_attribute_t l1profile_attributes[] = {
+-	{ {"profile_path"},    0,           l1set_profile_path},
++	{ {"init_path"},    0,           l1set_profile_path},
+ 	{ {"EEPROM_name"},     0,           l1set_eeprom_bin},
+ 	{ {"EEPROM_offset"},   0,           l1set_eeprom_offset},
+ 	{ {"EEPROM_size"},     0,           l1set_eeprom_size},

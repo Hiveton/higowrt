@@ -1,0 +1,21 @@
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -27,6 +27,7 @@
+ #define MTK_DSA_PORT_MASK	GENMASK(2, 0)
+ 
+ #define MTK_QDMA_NUM_QUEUES	16
++#define MTK_QDMA_QUEUE_MASK	((1ULL << MTK_QDMA_NUM_QUEUES) - 1)
+ #define MTK_QDMA_PAGE_SIZE	2048
+ #define MTK_MAX_RX_LENGTH	1536
+ #define MTK_MAX_RX_LENGTH_2K	2048
+--- a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
+@@ -251,7 +251,7 @@
+ 	if (dir < 0 || dir >= IP_CT_DIR_MAX)
+ 		return false;
+ 
+-	acct = nf_conn_acct_find(ct);
++	acct = NULL; /* 6.12 port: avoid built-in->module __nf_ct_ext_find */
+ 	if (!acct)
+ 		return false;
+ 

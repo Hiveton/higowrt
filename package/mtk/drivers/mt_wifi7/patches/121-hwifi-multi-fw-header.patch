@@ -1,0 +1,8 @@
+--- a/wlan_hwifi/Makefile
++++ b/wlan_hwifi/Makefile
+@@ -1,2 +1,5 @@
++ifeq ($(CONFIG_HWIFI_MULTI_FW_HEADER),y)
++ccflags-y += -DCONFIG_HWIFI_MULTI_FW_HEADER
++endif
+ # SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause
+ # Copyright (C) 2025 MediaTek Inc.

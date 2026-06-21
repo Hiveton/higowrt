@@ -1,0 +1,12 @@
+--- a/mt_wifi/include/sr_cmd.h
++++ b/mt_wifi/include/sr_cmd.h
+@@ -20,6 +20,9 @@
+ 
+ #ifndef __CMM_SR_CMD_H__
+ #define __CMM_SR_CMD_H__
++#ifndef AC_NUM
++#define AC_NUM 4
++#endif
+ 
+ #ifdef CFG_SUPPORT_FALCON_SR
+ /*******************************************************************************

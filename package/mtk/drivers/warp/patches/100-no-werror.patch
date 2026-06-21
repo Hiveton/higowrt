@@ -1,0 +1,11 @@
+--- a/Makefile
++++ b/Makefile
+@@ -21,7 +21,7 @@
+ 
+ ccflags-y += -DWARP_CHIP_SET="\"$(CONFIG_WARP_CHIPSET)\""
+ 
+-ccflags-y += -Werror -Wall -I$(srctree)/drivers/misc/mediatek/include/
++ccflags-y += -Wall -I$(srctree)/drivers/misc/mediatek/include/
+ 
+ all: build_tools
+ build_tools:

@@ -1,0 +1,114 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Hiveton H5000M (MT7987A + MT7992 Wi-Fi 7), eMMC boot.
+ * Ported to OpenWrt 25.12 (kernel 6.12) DT-overlay style, modeled on
+ * mt7987a-rfb.dts. Hiveton-specific: model/compatible, Wi-Fi GPIO LEDs,
+ * PWM fan. Ethernet via reused rfb eth overlays (see filogic.mk).
+ *
+ * NOTE: ethernet PHY/port topology inherited from the rfb i2p5g overlay;
+ * confirm against H5000M schematic and adjust DEVICE_DTS_OVERLAY if needed.
+ */
+
+/dts-v1/;
+#include "mt7987a.dtsi"
+#include <dt-bindings/input/input.h>
+
+/ {
+	model = "Hiveton H5000M";
+	compatible = "hiveton,h5000m", "mediatek,mt7987a", "mediatek,mt7987";
+
+	chosen {
+		bootargs = "console=ttyS0,115200n1 \
+			    earlycon=uart8250,mmio32,0x11000000 \
+			    pci=pcie_bus_perf \
+			    root=PARTLABEL=rootfs rootwait \
+			    rootfstype=squashfs,f2fs";
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			linux,code = <KEY_RESTART>;
+			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
+			debounce-interval = <10>;
+		};
+
+		wps {
+			label = "wps";
+			linux,code = <KEY_WPS_BUTTON>;
+			gpios = <&pio 0 GPIO_ACTIVE_LOW>;
+			debounce-interval = <10>;
+		};
+	};
+
+	/* use pwm0 as led: shared with fan/pwm_rgb */
+	pwm_led {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pwm_pins>;
+		status = "okay";
+
+		led {
+			pwms = <&pwm 0 50000 0>;
+			max-brightness = <255>;
+			active-low;
+			linux,default-trigger = "default-on";
+		};
+	};
+
+	gpio-leds {
+		compatible = "gpio-leds";
+
+		wifi2g: led1 {
+			label = "WiFi_2G";
+			gpios = <&pio 3 GPIO_ACTIVE_LOW>;
+		};
+
+		wifi5g: led2 {
+			label = "WiFi_5G";
+			gpios = <&pio 4 GPIO_ACTIVE_LOW>;
+		};
+	};
+};
+
+&fan {
+	compatible = "pwm-fan";
+	#cooling-cells = <2>;
+	cooling-levels = <0 10 20 30 40 50 60 70 80 90 100 110 120
+			  130 140 150 160 170 180 190 200 210 220 240 255>;
+	pwms = <&pwm 1 50000 0>;
+	status = "okay";
+};
+
+&i2c0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c0_pins>;
+	status = "okay";
+};
+
+&pcie0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pcie0_pins>;
+	status = "okay";
+};
+
+&pcie1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pcie1_pins>;
+	status = "okay";
+};
+
+&pwm {
+	status = "okay";
+};
+
+&ssusb {
+	status = "okay";
+};
+
+&uart0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pins>;
+	status = "okay";
+};

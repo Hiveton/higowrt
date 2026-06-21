@@ -1,0 +1,15 @@
+--- a/mt_wifi/os/linux/cfg80211/cfg80211_inf.c
++++ b/mt_wifi/os/linux/cfg80211/cfg80211_inf.c
+@@ -29,6 +29,12 @@
+ #include "rtmp_comm.h"
+ #include "rt_os_util.h"
+ #include "rt_os_net.h"
++#ifndef MTK_612_VLAN_STUB
++#define MTK_612_VLAN_STUB
++static inline int register_vlan_dev(struct net_device *d, void *e){return -EOPNOTSUPP;}
++static inline void unregister_vlan_dev(struct net_device *d, void *e){}
++static inline void vlan_setup(struct net_device *d){ether_setup(d);}
++#endif
+ 
+ #if defined(IWCOMMAND_CFG80211_SUPPORT) || defined(HOSTAPD_MBSS_SUPPORT)
+ extern struct wifi_dev_ops ap_wdev_ops;

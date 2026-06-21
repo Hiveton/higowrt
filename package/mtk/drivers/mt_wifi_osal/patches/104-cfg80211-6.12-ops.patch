@@ -1,0 +1,35 @@
+--- a/mt_osal_cfg80211.c
++++ b/mt_osal_cfg80211.c
+@@ -2482,6 +2482,7 @@
+ 
+ static int mt_cfg80211_ops_wiphy_params_set(
+ 	struct wiphy *pWiphy,
++	int radio_idx,
+ 	u32 Changed)
+ {
+ 	struct mt_cfg80211_vndr_ctrl ctrl_data, *ctrl_data_ptr = &ctrl_data;
+@@ -3224,6 +3225,7 @@
+ 
+ static int mt_cfg80211_ops_set_antenna(
+ 	struct wiphy *wiphy,
++	int radio_idx,
+ 	u32 tx_ant,
+ 	u32 rx_ant)
+ {
+@@ -3268,6 +3270,7 @@
+ 
+ static int mt_cfg80211_ops_get_antenna(
+ 	struct wiphy *wiphy,
++	int radio_idx,
+ 	u32 *tx_ant,
+ 	u32 *rx_ant)
+ {
+@@ -3494,6 +3497,8 @@
+ static int mt_cfg80211_ops_get_tx_power(
+ 		struct wiphy *wiphy,
+ 		struct wireless_dev *wdev,
++		int link_id,
++		unsigned int radio_idx,
+ 		int *dbm)
+ {
+ 	struct net_device *dev = NULL;

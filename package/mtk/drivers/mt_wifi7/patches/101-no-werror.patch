@@ -1,0 +1,33 @@
+--- a/warp_driver/warp/Makefile
++++ b/warp_driver/warp/Makefile
+@@ -21,7 +21,7 @@
+ 
+ ccflags-y += -DWARP_CHIP_SET="\"$(CONFIG_WARP_CHIPSET)\""
+ 
+-ccflags-y += -Werror -Wall -I$(srctree)/drivers/misc/mediatek/include/
++ccflags-y += -Wall -I$(srctree)/drivers/misc/mediatek/include/
+ 
+ all: build_tools
+ build_tools:
+--- a/wlan_hwifi/Makefile
++++ b/wlan_hwifi/Makefile
+@@ -19,7 +19,7 @@
+ endif
+ 
+ #core
+-ccflags-y += -Werror -Wall -g \
++ccflags-y += -Wall -g \
+ 	     -I$(SRC_DIR) \
+ 	     -I$(MTK_WIFI_MAC)/include \
+ 	     -I$(MTK_WIFI_MAC)/include/lib \
+--- a/mt_wifi/mk/config/config.mk
++++ b/mt_wifi/mk/config/config.mk
+@@ -69,7 +69,7 @@
+ #WFLAGS += -Wframe-larger-than=4096
+ 
+ ifeq ($(CONFIG_DBG_CFG),y)
+-WFLAGS += -DDBG -DDBG_ENHANCE -Werror
++WFLAGS += -DDBG -DDBG_ENHANCE
+ endif
+ 
+ 

@@ -1,0 +1,24 @@
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -303,10 +303,13 @@
+ 	"top_netsys_warp_sel",
+ };
+ 
++struct mtk_eth *g_eth;
++EXPORT_SYMBOL(g_eth);
+ void mtk_w32(struct mtk_eth *eth, u32 val, unsigned reg)
+ {
+ 	__raw_writel(val, eth->base + reg);
+ }
++EXPORT_SYMBOL(mtk_w32);
+ 
+ u32 mtk_r32(struct mtk_eth *eth, unsigned reg)
+ {
+@@ -5901,6 +5904,7 @@
+ 	netif_napi_add(eth->dummy_dev, &eth->rx_napi, mtk_napi_rx);
+ 
+ 	platform_set_drvdata(pdev, eth);
++	g_eth = eth;
+ 	schedule_delayed_work(&eth->reset.monitor_work,
+ 			      MTK_DMA_MONITOR_TIMEOUT);
+ 

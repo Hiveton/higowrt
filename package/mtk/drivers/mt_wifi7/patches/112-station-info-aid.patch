@@ -1,0 +1,11 @@
+--- a/mt_wifi/os/linux/cfg80211/cfg80211_util.c
++++ b/mt_wifi/os/linux/cfg80211/cfg80211_util.c
+@@ -639,7 +639,7 @@
+ 		if (assoc_resp_frame && (assoc_resp_len > 0)) {
+ 			mgmt = (struct ieee80211_mgmt *) assoc_resp_frame;
+ #ifdef HOSTAPD_WDS
+-			sinfo->aid = mgmt->u.assoc_resp.aid & (~((1 << 14) | (1 << 15)));
++			/* sinfo->aid removed in kernel 6.12 station_info */
+ #endif
+ 			sinfo->assoc_resp_ies = mgmt->u.assoc_resp.variable;
+ 			sinfo->assoc_resp_ies_len = assoc_resp_len - 24 - 6;

@@ -1,0 +1,19 @@
+--- a/mt_osal_packet.c
++++ b/mt_osal_packet.c
+@@ -370,6 +370,7 @@
+ 
+ bool mt_os_pkt_set_rps_hash(void *skb_, int rps_per_round)
+ {
++#if 0 /* 6.12 port: rps_map now private */
+ 	struct sk_buff *skb = (struct sk_buff *)skb_;
+ 	struct net_device *net_dev = skb->dev;
+ 	struct netdev_rx_queue *rxqueue = net_dev->_rx;
+@@ -394,6 +395,8 @@
+ 	}
+ 
+ 	return true;
++#endif
++	return false;
+ }
+ EXPORT_SYMBOL(mt_os_pkt_set_rps_hash);
+ 

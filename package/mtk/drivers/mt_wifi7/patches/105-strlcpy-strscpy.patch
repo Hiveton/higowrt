@@ -1,0 +1,547 @@
+--- a/mt_wifi/profiles/cmm_profile.c
++++ b/mt_wifi/profiles/cmm_profile.c
+@@ -44,7 +44,7 @@
+ 	RTMP_STRING temp_buf[32];
+ 	RTMP_STRING *ptr, *ret = NULL;
+ 
+-	strlcpy(temp_buf, "Default", strlen("Default") + 1);
++	strscpy(temp_buf, "Default", strlen("Default") + 1);
+ 	ptr = rtstrstr(buffer, temp_buf);
+ 
+ 	if (ptr != NULL) {
+@@ -106,7 +106,7 @@
+ 		return FALSE;
+ 	}
+ 
+-	strlcpy(temp_buf1, "\n", strlen("\n") + 1);
++	strscpy(temp_buf1, "\n", strlen("\n") + 1);
+ 	strncat(temp_buf1, key, strlen(key));
+ 	strncat(temp_buf1, "=", strlen("="));
+ 	/*search key*/
+@@ -149,7 +149,7 @@
+ 
+ 	len = strlen(start_ptr);
+ 	memset(dest, 0x00, destsize);
+-	strlcpy(dest, ptr, destsize);
++	strscpy(dest, ptr, destsize);
+ 	os_free_mem((PUCHAR)pMemBuf);
+ 	return TRUE;
+ }
+@@ -588,7 +588,7 @@
+ 		return FALSE;
+ 	}
+ 
+-	strlcpy(temp_buf1, "\n", strlen("\n") + 1);
++	strscpy(temp_buf1, "\n", strlen("\n") + 1);
+ 	strncat(temp_buf1, key, strlen(key));
+ 	strncat(temp_buf1, "=", strlen("="));
+ 
+@@ -683,7 +683,7 @@
+ 	} else
+ 		offset = buffer + (*end_offset);
+ 
+-	strlcpy(temp_buf1, "\n", strlen("\n") + 1);
++	strscpy(temp_buf1, "\n", strlen("\n") + 1);
+ 	strncat(temp_buf1, key, strlen(key));
+ 	strncat(temp_buf1, "=", strlen("="));
+ 	/*search key*/
+@@ -710,7 +710,7 @@
+ 	*end_offset = end_ptr - buffer;
+ 	NdisMoveMemory(temp_buf2, start_ptr, end_ptr - start_ptr);
+ 	temp_buf2[end_ptr - start_ptr] = '\0';
+-	strlcpy(temp_buf1, temp_buf2, strlen(temp_buf2) + 1);
++	strscpy(temp_buf1, temp_buf2, strlen(temp_buf2) + 1);
+ 	start_ptr = rtstrstr(temp_buf1, "=");
+ 
+ 	if (start_ptr == NULL) {
+@@ -719,7 +719,7 @@
+ 		return FALSE;
+ 	}
+ 
+-	strlcpy(temp_buf2, start_ptr + 1, strlen(start_ptr + 1) + 1);
++	strscpy(temp_buf2, start_ptr + 1, strlen(start_ptr + 1) + 1);
+ 	ptr = temp_buf2;
+ 
+ 	/*trim space or tab*/
+@@ -732,7 +732,7 @@
+ 
+ 	len = strlen(ptr);
+ 	memset(dest, 0x00, destsize);
+-	strlcpy(dest, ptr, len >= destsize ?  destsize : len);
++	strscpy(dest, ptr, len >= destsize ?  destsize : len);
+ 	os_free_mem((PUCHAR)temp_buf1);
+ 	os_free_mem((PUCHAR)temp_buf2);
+ 	return TRUE;
+@@ -9607,10 +9607,10 @@
+ 
+ 		arg_len = strlen(tmpbuf);
+ 		if (arg_len) {
+-			strlcpy(arg, tmpbuf, arg_len + 1);
++			strscpy(arg, tmpbuf, arg_len + 1);
+ 
+ 			/* also keep profiles */
+-			strlcpy(arg_profile, tmpbuf, arg_len + 1);
++			strscpy(arg_profile, tmpbuf, arg_len + 1);
+ 			MTWF_PRINT("%s: LpOption=%s, arg_len=%d\n", __func__, arg, arg_len);
+ 		}
+ 	}
+@@ -9676,7 +9676,7 @@
+ 
+ 		arg_len = strlen(tmpbuf);
+ 		if (arg_len)
+-			strlcpy(arg, tmpbuf, sizeof(arg_len) + 1);
++			strscpy(arg, tmpbuf, sizeof(arg_len) + 1);
+ 	}
+ }
+ 
+--- a/mt_wifi/hw_ctrl/sr_cmd.c
++++ b/mt_wifi/hw_ctrl/sr_cmd.c
+@@ -4765,11 +4765,11 @@
+ 		if (fghavebeensend != fgmeshdetect) {
+ 			fghavebeensend = fgmeshdetect;
+ 			if (fgmeshdetect) {
+-				strlcpy(MeshSdFlag, "0", sizeof(MeshSdFlag)); //There is no unknown apcli
+-				strlcpy(SCSEnable, "1", sizeof(SCSEnable));  //scs on
++				strscpy(MeshSdFlag, "0", sizeof(MeshSdFlag)); //There is no unknown apcli
++				strscpy(SCSEnable, "1", sizeof(SCSEnable));  //scs on
+ 			} else {
+-				strlcpy(MeshSdFlag, "1", sizeof(MeshSdFlag)); //There is a unknown apcli
+-				strlcpy(SCSEnable, "0", sizeof(SCSEnable));  //scs off
++				strscpy(MeshSdFlag, "1", sizeof(MeshSdFlag)); //There is a unknown apcli
++				strscpy(SCSEnable, "0", sizeof(SCSEnable));  //scs off
+ 
+ 			}
+ 			fgmeshdetect = 1;
+--- a/mt_wifi/hw_ctrl/hwifi_main.c
++++ b/mt_wifi/hw_ctrl/hwifi_main.c
+@@ -467,7 +467,7 @@
+ 
+ #ifdef FW_LOG_DUMP
+ 	if (strlen(fw_log_arg)) {
+-		strlcpy(fw_log_arg_tmp, fw_log_arg, strlen(fw_log_arg) + 1);
++		strscpy(fw_log_arg_tmp, fw_log_arg, strlen(fw_log_arg) + 1);
+ 		set_fw_log(ad, fw_log_arg_tmp);
+ 	}
+ #endif /* FW_LOG_DUMP */
+--- a/mt_wifi/hw_ctrl/eeprom.c
++++ b/mt_wifi/hw_ctrl/eeprom.c
+@@ -1519,7 +1519,7 @@
+ 			}
+ 		}
+ 
+-		strlcpy(src, bin_file_path, sizeof(src));
++		strscpy(src, bin_file_path, sizeof(src));
+ 	} else
+ #endif /* MULTIPLE_CARD_SUPPORT */
+ #endif /* RT_SOC_SUPPORT */
+--- a/mt_wifi/hw_ctrl/hw_ctrl_basic.c
++++ b/mt_wifi/hw_ctrl/hw_ctrl_basic.c
+@@ -542,7 +542,7 @@
+ {
+ 	struct starv_dbg_block *block = &hw_ctrl->block;
+ 
+-	strlcpy(block->name, "hwctrl", sizeof(block->name));
++	strscpy(block->name, "hwctrl", sizeof(block->name));
+ 	block->priv = hw_ctrl;
+ 	block->ctrl = ctrl;
+ 	block->timeout = 100;
+--- a/mt_wifi/chip/mcu/andes_core.c
++++ b/mt_wifi/chip/mcu/andes_core.c
+@@ -39,7 +39,7 @@
+ {
+ 	struct starv_dbg_block *block = &mcu_ctrl->block;
+ 
+-	strlcpy(block->name, "andes", sizeof(block->name));
++	strscpy(block->name, "andes", sizeof(block->name));
+ 	block->priv = mcu_ctrl;
+ 	block->ctrl = ctrl;
+ 	block->timeout = 1000;
+--- a/mt_wifi/ap/ap_cfg.c
++++ b/mt_wifi/ap/ap_cfg.c
+@@ -4836,7 +4836,7 @@
+ 
+ 					NdisZeroMemory((PCHAR)pAd->ApCfg.MBSSID[ifIndex].Ssid,
+ 						   MAX_LEN_OF_SSID);
+-					strlcpy((PCHAR)pAd->ApCfg.MBSSID[ifIndex].Ssid,
++					strscpy((PCHAR)pAd->ApCfg.MBSSID[ifIndex].Ssid,
+ 						pSsidString
+ 						, MAX_LEN_OF_SSID);
+ 					pAd->ApCfg.MBSSID[ifIndex].Ssid[MAX_LEN_OF_SSID] =
+@@ -14155,7 +14155,7 @@
+ 	os_zero_mem(buf, strlen(arg)*sizeof(RTMP_STRING));
+ 
+ 	tmp = buf;
+-	strlcpy(buf, arg, strlen(arg)*sizeof(RTMP_STRING)-1);
++	strscpy(buf, arg, strlen(arg)*sizeof(RTMP_STRING)-1);
+ 	while (strsep(&buf, ":"))
+ 		skiplist_cnt++;
+ 
+--- a/mt_wifi/common/cmm_info.c
++++ b/mt_wifi/common/cmm_info.c
+@@ -17571,7 +17571,7 @@
+ 		strLen = strlen(value);
+ 
+ 		if (strLen & 1) {
+-			strlcpy(value_T, "0", sizeof(value_T));
++			strscpy(value_T, "0", sizeof(value_T));
+ 			strncat(value_T, value, strLen);
+ 			AtoH(value_T, (PCHAR)(&Input[i]), 2);
+ 			Input[i] = be2cpu16(Input[i]);
+@@ -17734,7 +17734,7 @@
+ 		str_len = strlen(value);
+ 
+ 		if (str_len & 1) {
+-			strlcpy(value_t, "0", sizeof(value_t));
++			strscpy(value_t, "0", sizeof(value_t));
+ 			strncat(value_t, value, str_len);
+ 			AtoH(value_t, (PCHAR)(&input[i]), 2);
+ 			input[i] = be2cpu16(input[i]);
+@@ -17904,7 +17904,7 @@
+ 		strLen = strlen(value);
+ 
+ 		if (strLen & 1) {
+-			strlcpy(value_T, "0", sizeof(value_T));
++			strscpy(value_T, "0", sizeof(value_T));
+ 			strncat(value_T, value, strLen);
+ 			AtoH(value_T, (PCHAR)(&Input[i]), 2);
+ 			Input[i] = be2cpu16(Input[i]);
+--- a/mt_wifi/common/sniffer_prism.c
++++ b/mt_wifi/common/sniffer_prism.c
+@@ -122,7 +122,7 @@
+ 		NdisZeroMemory(ph, sizeof(wlan_ng_prism2_header));
+ 		ph->msgcode = DIDmsg_lnxind_wlansniffrm;
+ 		ph->msglen = sizeof(wlan_ng_prism2_header);
+-		strlcpy((RTMP_STRING *) ph->devname, (RTMP_STRING *) pDevName, WLAN_DEVNAMELEN_MAX);
++		strscpy((RTMP_STRING *) ph->devname, (RTMP_STRING *) pDevName, WLAN_DEVNAMELEN_MAX);
+ 		ph->hosttime.did = DIDmsg_lnxind_wlansniffrm_hosttime;
+ 		ph->hosttime.status = 0;
+ 		ph->hosttime.len = 4;
+--- a/mt_wifi/common/safe_chn.c
++++ b/mt_wifi/common/safe_chn.c
+@@ -1110,12 +1110,12 @@
+ 	for (i = 0, tmp = rstrtok(arg, "-"); tmp; tmp = rstrtok(NULL, "-"), i++) {
+ 		switch (i) {
+ 		case 0:
+-			strlcpy(safeChan, tmp, buf_size);
++			strscpy(safeChan, tmp, buf_size);
+ 			while (strsep(&tmp, ":"))
+ 				safeChCnt++;
+ 			break;
+ 		case 1:
+-			strlcpy(pwrChan, tmp, buf_size);
++			strscpy(pwrChan, tmp, buf_size);
+ 			while (strsep(&tmp, ":"))
+ 				pwrChCnt++;
+ 			break;
+--- a/mt_wifi/common/dbg_ctrl.c
++++ b/mt_wifi/common/dbg_ctrl.c
+@@ -118,7 +118,7 @@
+ 	UINT32 ip_addr;
+ 	UCHAR ip_buf[128];
+ 
+-	strlcpy(ip_buf, arg, sizeof(ip_buf));
++	strscpy(ip_buf, arg, sizeof(ip_buf));
+ 	ip_buf[sizeof(ip_buf) - 1] = '\0';
+ 	MTWF_PRINT("ip=[%s]\n", ip_buf);
+ 
+@@ -134,7 +134,7 @@
+ 	INT	i, mac_len;
+ 	UCHAR mac_buf[20];
+ 
+-	strlcpy(mac_buf, arg, sizeof(mac_buf));
++	strscpy(mac_buf, arg, sizeof(mac_buf));
+ 	mac_buf[sizeof(mac_buf) - 1] = '\0';
+ 	mac_len = strlen(arg);
+ 
+--- a/mt_wifi/common/bss_mngr/bss_mngr.c
++++ b/mt_wifi/common/bss_mngr/bss_mngr.c
+@@ -1327,7 +1327,7 @@
+ 		if (BMGR_VALID_BSS_IDX(bss_idx_mld)) {
+ 			mld_entry = GET_BSS_ENTRY_BY_IDX(bss_idx_mld);
+ 			if (mld_entry) {
+-				strlcpy(str, (bss_idx_mld == bss_idx) ? "iob" : "oob", sizeof(str));
++				strscpy(str, (bss_idx_mld == bss_idx) ? "iob" : "oob", sizeof(str));
+ 				str[sizeof(str) - 1] = '\0';
+ #ifdef DOT11V_MBSSID_SUPPORT
+ 				MTWF_DBG(NULL, DBG_CAT_MLO, CATMLO_BMGR, DBG_LVL_INFO,
+--- a/mt_wifi/common/bcn.c
++++ b/mt_wifi/common/bcn.c
+@@ -1799,7 +1799,7 @@
+ 	INT len;
+ 
+ 	// tmpbuf1 = "key="
+-	strlcpy(temp_buf1, key, strlen(key) + 1);
++	strscpy(temp_buf1, key, strlen(key) + 1);
+ 	strncat(temp_buf1, "=", strlen("="));
+ 
+ 	// search buffer, get start_ptr
+@@ -1842,7 +1842,7 @@
+ 	// get result
+ 	len = strlen(start_ptr);
+ 	NdisZeroMemory(dest, dest_size);
+-	strlcpy(dest, ptr, dest_size);
++	strscpy(dest, ptr, dest_size);
+ 
+ 	return TRUE;
+ }
+--- a/mt_wifi/common/cmm_cfg.c
++++ b/mt_wifi/common/cmm_cfg.c
+@@ -2443,7 +2443,7 @@
+ 			case 1:
+ 				temp[i] = '\0';
+ 				if ((strlen(temp) != 0) && (strlen(temp) <= 7)) {
+-					strlcpy(scantype, temp, sizeof(scantype));
++					strscpy(scantype, temp, sizeof(scantype));
+ 					if (strcmp(scantype, "active") && strcmp(scantype, "passive")) {
+ 						MTWF_PRINT("wrong scan type argument\n");
+ 						return FALSE;
+@@ -13436,7 +13436,7 @@
+ 
+ 	if (wdev->if_dev) {
+ 		len = (sizeof(wdev->if_dev->name) > 15) ? 15 : sizeof(wdev->if_dev->name);
+-		strlcpy(result->radio_name, wdev->if_dev->name, sizeof(result->radio_name));
++		strscpy(result->radio_name, wdev->if_dev->name, sizeof(result->radio_name));
+ 	}
+ 
+ 	result->radio_mode = pBss->BssType;
+--- a/mt_wifi/feature/wps/wsc.c
++++ b/mt_wifi/feature/wps/wsc.c
+@@ -335,7 +335,7 @@
+ 		MTWF_DBG(pAd, DBG_CAT_SEC, CATSEC_WPS, DBG_LVL_ERROR,
+ 			"ERROR:UUID String size too large!\n");
+ 
+-	strlcpy((RTMP_STRING *)uuidAscStr, uuidTmpStr, UUID_LEN_STR);
++	strscpy((RTMP_STRING *)uuidAscStr, uuidTmpStr, UUID_LEN_STR);
+ 	/* Create the UUID Hex format number */
+ 	uuid_t.timeLow = cpu2be32(uuid_t.timeLow);
+ 	NdisMoveMemory(&uuidHexStr[0], &uuid_t.timeLow, 4);
+@@ -4802,7 +4802,7 @@
+ #define WSC_JOIN_MSG_LEN (MAX_LEN_OF_SSID + MAC_ADDR_LEN + 1)
+ 	UCHAR pData[WSC_JOIN_MSG_LEN] = {0};
+ 
+-	strlcpy((RTMP_STRING *) pData, (RTMP_STRING *)ssidStr, MAX_LEN_OF_SSID);
++	strscpy((RTMP_STRING *) pData, (RTMP_STRING *)ssidStr, MAX_LEN_OF_SSID);
+ 	NdisMoveMemory(&pData[MAX_LEN_OF_SSID], macAddr, MAC_ADDR_LEN);
+ 	pData[MAX_LEN_OF_SSID + MAC_ADDR_LEN] = Status;
+ 	WscSendUPnPMessage(pAd, apIdx, WSC_OPCODE_UPNP_MGMT, WSC_UPNP_MGMT_SUB_CONFIG_REQ,
+--- a/mt_wifi/feature/whc/event_notifier.c
++++ b/mt_wifi/feature/whc/event_notifier.c
+@@ -443,7 +443,7 @@
+ 	pAd->ApCfg.EventNotifyCfg.CustomOUILen = 0;
+ 	NdisZeroMemory(pAd->ApCfg.EventNotifyCfg.CustomOUI, sizeof(pAd->ApCfg.EventNotifyCfg.CustomOUI));
+ 
+-	strlcpy(tmp, arg, sizeof(tmp));
++	strscpy(tmp, arg, sizeof(tmp));
+ 	len = strlen(tmp);
+ 	if (len > 0) {
+ 		if (len % 2 != 0) {
+@@ -499,7 +499,7 @@
+ 	wdev->custom_vie.ie_hdr.len = 0;
+ 	NdisZeroMemory(wdev->custom_vie.custom_ie, CUSTOM_IE_TOTAL_LEN);
+ 
+-	strlcpy(tmp, arg, sizeof(tmp));
++	strscpy(tmp, arg, sizeof(tmp));
+ 	len = strlen(tmp);
+ 	if (len > 0) {
+ 		if (len % 2 != 0) {
+--- a/mt_wifi/feature/band_steering/ap_band_steering.c
++++ b/mt_wifi/feature/band_steering/ap_band_steering.c
+@@ -457,7 +457,7 @@
+ 			 "Invalid BndStrg param\n");
+ 		return FALSE;
+ 	}
+-	strlcpy(bndstrg_param->arg, arg, bndstrg_param->len);
++	strscpy(bndstrg_param->arg, arg, bndstrg_param->len);
+ 	bndstrg_param->arg[bndstrg_param->len] = '\0';
+ 	BndStrgSendMsg(pAd, &msg);
+ 
+@@ -991,7 +991,7 @@
+ 			return BND_STRG_INVALID_ARG;
+ 
+ 		table->bEnabled = TRUE;
+-		strlcpy(table->ucIfName, IfName, sizeof(table->ucIfName)); /* decide it by daemon */
++		strscpy(table->ucIfName, IfName, sizeof(table->ucIfName)); /* decide it by daemon */
+ 		table->ucIfName[str_len] = '\0';
+ 	} else
+ 		table->bEnabled = FALSE;
+@@ -1006,7 +1006,7 @@
+ 	if (str_len >= sizeof(onoff->ucIfName)) /*reserve space for null-character*/
+ 		return BND_STRG_INVALID_ARG;
+ 
+-	strlcpy(onoff->ucIfName, IfName, sizeof(onoff->ucIfName));
++	strscpy(onoff->ucIfName, IfName, sizeof(onoff->ucIfName));
+ 	onoff->ucIfName[str_len] = '\0';
+ 	RtmpOSWrielessEventSend(
+ 		pAd->net_dev,
+@@ -1090,7 +1090,7 @@
+ 	inf_status_rsp->nss = table->nss;
+ 	inf_status_rsp->table_src_addr = (ULONG)table;
+ 	inf_status_rsp->table_size = BND_STRG_MAX_TABLE_SIZE;
+-	strlcpy(inf_status_rsp->ucIfName, wdev->if_dev->name, sizeof(inf_status_rsp->ucIfName));
++	strscpy(inf_status_rsp->ucIfName, wdev->if_dev->name, sizeof(inf_status_rsp->ucIfName));
+ 	inf_status_rsp->nvram_support = 0;
+ 	BndStrgSendMsg(pAd, &msg);
+ 	MTWF_PRINT(BLUE("%s(): BSS("MACSTR")")
+@@ -1610,7 +1610,7 @@
+ 		inf_status_rsp->nss = table->nss;
+ 		inf_status_rsp->table_src_addr = (ULONG)table;
+ 		inf_status_rsp->table_size = BND_STRG_MAX_TABLE_SIZE;
+-		strlcpy(inf_status_rsp->ucIfName, inf_status_req->ucIfName, sizeof(inf_status_rsp->ucIfName));
++		strscpy(inf_status_rsp->ucIfName, inf_status_req->ucIfName, sizeof(inf_status_rsp->ucIfName));
+ 		inf_status_rsp->ucIfName[sizeof(inf_status_rsp->ucIfName) - 1] = '\0';
+ 		inf_status_rsp->nvram_support = 0;
+ 		MTWF_DBG(pAd, DBG_CAT_PROTO, CATPROTO_BND_STRG, DBG_LVL_INFO,
+--- a/mt_wifi/feature/lp/lp.c
++++ b/mt_wifi/feature/lp/lp.c
+@@ -56,9 +56,9 @@
+ 	/* profile init */
+ 	memset(plp_ctrl->profile_option_raw_arg, 0, 10);
+ 	/* TPO Raw all off */
+-	strlcpy(plp_ctrl->option_raw_arg, "0:0", 4);
++	strscpy(plp_ctrl->option_raw_arg, "0:0", 4);
+ 	/* profile init */
+-	strlcpy(plp_ctrl->profile_option_raw_arg, "0:0", 4);
++	strscpy(plp_ctrl->profile_option_raw_arg, "0:0", 4);
+ 
+ 	/* TPO (Transmit Power Optimization) global default disable */
+ 	ptpt_ctrl->tpo_enable = 0;
+--- a/mt_wifi/tools/bin2h.c
++++ b/mt_wifi/tools/bin2h.c
+@@ -33,7 +33,7 @@
+ 	return res < 0 || (unsigned int) res >= size;
+ }
+ 
+-static size_t strlcpy(char *dest, const char *src, size_t size)
++static size_t strscpy(char *dest, const char *src, size_t size)
+ {
+ 	size_t ret = strlen(src);
+ 
+@@ -558,9 +558,9 @@
+ 			strcat(ine2pname, PATH_OF_EEPROM_IN);
+ 			strcat(ine2pname, chipset);
+ 			strcat(ine2pname, "/");
+-			strlcpy(ine2pname2, ine2pname, 512 - 1);
++			strscpy(ine2pname2, ine2pname, 512 - 1);
+ 			ine2pname2[511] = '\0';
+-			strlcpy(ine2pname3, ine2pname, 512 - 1);
++			strscpy(ine2pname3, ine2pname, 512 - 1);
+ 			ine2pname3[511] = '\0';
+ 			strcat(e2p_name, "MT7915_E2PImage_ePAiLNA");
+ 			strcat(ine2pname, "rebb/MT7915_ePAiLNA_EEPROM.bin");
+@@ -637,8 +637,8 @@
+ 			strcat(ine2pname, PATH_OF_EEPROM_IN);
+ 			strcat(ine2pname, chipset);
+ 			strcat(ine2pname, "/");
+-			strlcpy(ine2pname2, ine2pname, 512);
+-			strlcpy(ine2pname3, ine2pname, 512);
++			strscpy(ine2pname2, ine2pname, 512);
++			strscpy(ine2pname3, ine2pname, 512);
+ 			strcat(e2p_name, "BELLWETHER_E2PImage_ePAiLNA");
+ 			strcat(ine2pname, "rebb/BELLWETHER_ePAiLNA_EEPROM.bin");
+ 			strcat(oute2pname, top_dir);
+@@ -755,8 +755,8 @@
+ 			strcat(ine2pname, PATH_OF_EEPROM_IN);
+ 			strcat(ine2pname, chipset);
+ 			strcat(ine2pname, "/");
+-			strlcpy(ine2pname2, ine2pname, 512);
+-			strlcpy(ine2pname3, ine2pname, 512);
++			strscpy(ine2pname2, ine2pname, 512);
++			strscpy(ine2pname3, ine2pname, 512);
+ 			strcat(e2p_name, "MT7990_E2PImage_ePAiLNA");
+ 			strcat(ine2pname, "rebb/MT7990_ePAiLNA_EEPROM.bin");
+ 			strcat(oute2pname, top_dir);
+@@ -1122,8 +1122,8 @@
+ 			strcat(ine2pname, PATH_OF_EEPROM_IN);
+ 			strcat(ine2pname, chipset);
+ 			strcat(ine2pname, "/");
+-			strlcpy(ine2pname2, ine2pname, 512);
+-			strlcpy(ine2pname3, ine2pname, 512);
++			strscpy(ine2pname2, ine2pname, 512);
++			strscpy(ine2pname3, ine2pname, 512);
+ 			strcat(e2p_name, "MT7992_E2PImage_ePAiLNA");
+ 			strcat(ine2pname, "rebb/MT7992_ePAiLNA_EEPROM.bin");
+ 			strcat(oute2pname, top_dir);
+@@ -1208,8 +1208,8 @@
+ 			strcat(ine2pname, PATH_OF_EEPROM_IN);
+ 			strcat(ine2pname, chipset);
+ 			strcat(ine2pname, "/");
+-			strlcpy(ine2pname2, ine2pname, 512);
+-			strlcpy(ine2pname3, ine2pname, 512);
++			strscpy(ine2pname2, ine2pname, 512);
++			strscpy(ine2pname3, ine2pname, 512);
+ 			strcat(e2p_name, "MT7993_E2PImage_ePAiLNA");
+ 			strcat(ine2pname, "rebb/MT7993_MT7976_EEPROM_BE3600_ePAiLNA.bin");
+ 			strcat(oute2pname, top_dir);
+@@ -1308,8 +1308,8 @@
+ 			strcat(ine2pname, PATH_OF_EEPROM_IN);
+ 			strcat(ine2pname, chipset);
+ 			strcat(ine2pname, "/");
+-			strlcpy(ine2pname2, ine2pname, 512);
+-			strlcpy(ine2pname3, ine2pname, 512);
++			strscpy(ine2pname2, ine2pname, 512);
++			strscpy(ine2pname3, ine2pname, 512);
+ 			strcat(e2p_name, "BLACKHAWK_A0_E2PImage_ePAiLNA");
+ 			strcat(ine2pname, "rebb/BLACKHAWK_A0_MT7976_EEPROM_BN25000_ePAiLNA.bin");
+ 			strcat(oute2pname, top_dir);
+--- a/mt_wifi/sta/sta_cfg.c
++++ b/mt_wifi/sta/sta_cfg.c
+@@ -1461,7 +1461,7 @@
+ 		MTWF_DBG(pAd, DBG_CAT_CFG, CATCFG_CMD, DBG_LVL_WARN,
+ 			"WARN:UUID String size too large!\n");
+ 
+-	strlcpy((RTMP_STRING *)pWscControl->Wsc_Uuid_Str, uuidTmpStr, UUID_LEN_STR);
++	strscpy((RTMP_STRING *)pWscControl->Wsc_Uuid_Str, uuidTmpStr, UUID_LEN_STR);
+ 	pWscControl->Wsc_Uuid_Str[UUID_LEN_STR - 1] = '\0';
+ 
+ 	NdisMoveMemory(&pWscControl->Wsc_Uuid_E[0], Wsc_Uuid_E, UUID_LEN_HEX);
+--- a/mt_wifi/os/linux/rt_linux.c
++++ b/mt_wifi/os/linux/rt_linux.c
+@@ -562,7 +562,7 @@
+ 		dev->priv = (void *)(((long)(dev + 1) + 31) & ~31);
+ 
+ 	setup(dev);
+-	strlcpy(dev->name, mask, sizeof(dev->name));
++	strscpy(dev->name, mask, sizeof(dev->name));
+ 	return dev;
+ }
+ #endif /* LINUX_VERSION_CODE */
+--- a/mt_wifi/os/linux/mt_fwdump.c
++++ b/mt_wifi/os/linux/mt_fwdump.c
+@@ -103,7 +103,7 @@
+ 	}
+ 
+ 	if (!pCookie->proc_fwdump_file) {
+-		strlcpy(fwdump_file_name, FW_DUMP_NAME, sizeof(fwdump_file_name));
++		strscpy(fwdump_file_name, FW_DUMP_NAME, sizeof(fwdump_file_name));
+ 		strcat(fwdump_file_name, pAd->net_dev->name);
+ 		strcat(fwdump_file_name, suffix);
+ 		pCookie->proc_fwdump_file = proc_create_data(fwdump_file_name, 0644, pCookie->proc_fwdump_dir, &fops_dump, (VOID *)pAd);
+@@ -128,7 +128,7 @@
+ 	POS_COOKIE pCookie;
+ 
+ 	pCookie = (POS_COOKIE) pAd->OS_Cookie;
+-	strlcpy(fwdump_file_name, FW_DUMP_NAME, sizeof(fwdump_file_name));
++	strscpy(fwdump_file_name, FW_DUMP_NAME, sizeof(fwdump_file_name));
+ 	strcat(fwdump_file_name, pAd->net_dev->name);
+ 
+ 	if (pCookie->proc_fwdump_file)
+--- a/mt_wifi/ap/ap.c
++++ b/mt_wifi/ap/ap.c
+@@ -8819,7 +8819,7 @@
+ 	size_t len;
+ 
+ 	// tmpbuf1 = "key="
+-	strlcpy(temp_buf1, key, strlen(key) + 1);
++	strscpy(temp_buf1, key, strlen(key) + 1);
+ 	strncat(temp_buf1, "=", strlen("="));
+ 
+ 	// search buffer, get start_ptr
+@@ -8862,7 +8862,7 @@
+ 
+ 	// get result
+ 	NdisZeroMemory(dest, dest_size);
+-	strlcpy(dest, ptr, dest_size);
++	strscpy(dest, ptr, dest_size);
+ 
+ 	return TRUE;
+ }

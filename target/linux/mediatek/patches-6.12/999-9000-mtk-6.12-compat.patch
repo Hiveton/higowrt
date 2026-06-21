@@ -1,0 +1,24 @@
+Index: linux-6.12.87/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+===================================================================
+--- linux-6.12.87.orig/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ linux-6.12.87/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -91,6 +91,7 @@
+ /* Frame Engine Interrupt Status Register */
+ #define MTK_INT_STATUS2		0x08
+ #define MTK_FE_INT_ENABLE	0x0c
++#define MTK_FE_INT_STATUS	0x08
+ #define MTK_FE_INT_FQ_EMPTY	BIT(8)
+ #define MTK_FE_INT_TSO_FAIL	BIT(12)
+ #define MTK_FE_INT_TSO_ILLEGAL	BIT(13)
+Index: linux-6.12.87/drivers/net/pcs/pcs-mtk-lynxi.c
+===================================================================
+--- linux-6.12.87.orig/drivers/net/pcs/pcs-mtk-lynxi.c
++++ linux-6.12.87/drivers/net/pcs/pcs-mtk-lynxi.c
+@@ -206,6 +206,7 @@ static int mtk_pcs_lynxi_config(struct p
+ 	struct mtk_pcs_lynxi *mpcs = pcs_to_mtk_pcs_lynxi(pcs);
+ 	bool mode_changed = false, changed;
+ 	unsigned int rgc3, sgm_mode, bmcr = 0, trxbuf_thr = 0x3112;
++	unsigned int pnswap_tx, pnswap_rx;
+ 	int advertise, link_timer;
+ 
+ 	advertise = phylink_mii_c22_pcs_encode_advertisement(interface,

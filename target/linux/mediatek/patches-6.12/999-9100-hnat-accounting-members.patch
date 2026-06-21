@@ -1,0 +1,21 @@
+--- a/include/net/netfilter/nf_conntrack_acct.h
++++ b/include/net/netfilter/nf_conntrack_acct.h
+@@ -14,6 +14,8 @@
+ struct nf_conn_counter {
+ 	atomic64_t packets;
+ 	atomic64_t bytes;
++	atomic64_t diff_packets;
++	atomic64_t diff_bytes;
+ };
+ 
+ struct nf_conn_acct {
+--- a/include/net/netfilter/nf_flow_table.h
++++ b/include/net/netfilter/nf_flow_table.h
+@@ -210,6 +210,7 @@
+ 	u16 vlan_id;
+ 	u16 pppoe_sid;
+ 	u16 dsa_port;
++	u32 skb_hash;
+ };
+ 
+ #define NF_FLOW_TIMEOUT (30 * HZ)
