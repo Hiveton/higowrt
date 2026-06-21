@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 56">
+  <g stroke="#1ECD8C" stroke-width="3.5" stroke-linecap="round" fill="none">
+    <path d="M14 40 a18 18 0 0 1 30 0" opacity="0.5"/>
+    <path d="M20 40 a11 11 0 0 1 18 0" opacity="0.85"/>
+  </g>
+  <circle cx="29" cy="40" r="3.6" fill="#1ECD8C"/>
+  <text x="58" y="42" font-family="'Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="700" letter-spacing="0.5"><tspan fill="#1ECD8C">Hi</tspan><tspan fill="#16241F">Go</tspan><tspan fill="#15A572">WRT</tspan></text>
+</svg>

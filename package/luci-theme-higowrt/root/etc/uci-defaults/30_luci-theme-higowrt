@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ "$PKG_UPGRADE" != 1 ]; then
+	uci get luci.themes.HiGoWRT >/dev/null 2>&1 || \
+	uci batch <<-EOF
+		set luci.themes.HiGoWRT=/luci-static/higowrt
+		set luci.main.mediaurlbase=/luci-static/higowrt
+		commit luci
+	EOF
+fi
+
+exit 0

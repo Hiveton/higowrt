@@ -1,0 +1,118 @@
+/* HiGoWRT theme — extra layer: gradient header, login page, dark mode, motion */
+
+/* Header: 活力绿 → 青 渐变 */
+header,
+header > .fill {
+	background: linear-gradient(135deg, #1ECD8C 0%, #0FB5C9 100%) !important;
+}
+
+/* 卡片: 圆角 + 柔和阴影 + 过渡 */
+.cbi-section,
+fieldset.cbi-section,
+.table,
+.cbi-section-node {
+	border-radius: 12px !important;
+	box-shadow: 0 2px 12px rgba(30, 205, 140, 0.08) !important;
+	transition: box-shadow .2s ease, transform .2s ease;
+}
+.cbi-section:hover {
+	box-shadow: 0 4px 18px rgba(30, 205, 140, 0.14) !important;
+}
+
+/* 按钮: 圆角 + hover 上浮; 主按钮活力绿渐变 */
+.btn,
+.cbi-button {
+	border-radius: 8px !important;
+	transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+.btn:hover,
+.cbi-button:hover {
+	transform: translateY(-1px);
+	filter: brightness(1.05);
+}
+.cbi-button-apply,
+.cbi-button-save,
+.cbi-button-positive,
+.cbi-button-action {
+	background: linear-gradient(135deg, #1ECD8C, #15A572) !important;
+	border: none !important;
+	color: #fff !important;
+}
+
+/* 输入框 focus: 活力绿描边 */
+input:focus,
+select:focus,
+textarea:focus {
+	border-color: #1ECD8C !important;
+	box-shadow: 0 0 0 3px rgba(30, 205, 140, 0.18) !important;
+}
+
+/* === 登录页 === */
+.node-main-login {
+	background: linear-gradient(135deg, #0E3B2C 0%, #1ECD8C 55%, #0FB5C9 100%) !important;
+	min-height: 100vh;
+}
+.node-main-login > .main {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+}
+.node-main-login fieldset.cbi-section {
+	background: rgba(255, 255, 255, 0.96) !important;
+	border-radius: 18px !important;
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25) !important;
+	padding: 36px 32px !important;
+	max-width: 380px;
+	margin: 0 auto;
+}
+.node-main-login fieldset.cbi-section::before {
+	content: "";
+	display: block;
+	height: 56px;
+	margin: 0 auto 20px;
+	background: url("/luci-static/higowrt/brand-color.svg") center / contain no-repeat;
+}
+.node-main-login input[type=password],
+.node-main-login input[type=text] {
+	border-radius: 8px !important;
+	border: 1px solid #d6f6ea !important;
+	transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+/* === 暗色模式 (跟随系统) === */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--white-color: #16241F;
+		--white-color-low: #0E1B17;
+		--black-color: #E8F5EF;
+		--black-color-low: #0E1B17;
+		--menu-bg-color: #16241F;
+		--menu-color: #b8c9c1;
+		--main-menu-color: #E8F5EF;
+		--menu-color-hover: #1ECD8C;
+		--submenu-bg-hover: #1d3a30;
+		--gray-color: #2a3a34;
+		--gray-color-high: #3a4a44;
+	}
+	body {
+		background: #0E1B17 !important;
+		color: #E8F5EF;
+	}
+	.cbi-section,
+	fieldset.cbi-section,
+	.table,
+	.cbi-section-node {
+		background: #16241F !important;
+		color: #E8F5EF !important;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4) !important;
+	}
+	a {
+		color: #4DDBA5;
+	}
+	input, select, textarea {
+		background: #0E1B17 !important;
+		color: #E8F5EF !important;
+		border-color: #2a3a34 !important;
+	}
+}

@@ -1,0 +1,62 @@
+/**
+	HiGoWRT theme color palette — 活力绿 (Vibrant Green)
+	Based on luci-theme-material custom.css color API.
+	Only brand/accent colors changed to green; status colors kept.
+*/
+:root {
+	/** General colors */
+	--white-color: #ffffff;
+	--white-color-low: #f9f9f9;
+	--black-color: #000000;
+	--black-color-low: #202124;
+	--yellow-color: #f0ad4e;
+	--yellow-color-high: #eea236;
+	--on-yellow-color: var(--white-color);
+	--red-color: #d9534f;
+	--red-color-high: #d43f3a;
+	--on-red-color: var(--white-color);
+	--green-color: #5cb85c;
+	--green-color-high: #4cae4c;
+	--on-green-color: var(--white-color);
+
+	/* HiGoWRT: 强调色由 material 蓝 改为活力绿系 */
+	--dark-blue-color: #15A572;
+	--dark-blue-color-high: #0F8A5F;
+	--on-dark-blue-color: var(--white-color);
+	--gray-color: #d4d4d4;
+	--gray-color-high: #bfbfbf;
+	--light-blue-color: #2DD4BF;
+	--light-blue-color-high: #14B8A6;
+	--on-light-blue-color: var(--white-color);
+
+	/* HiGoWRT 主色: 活力翠绿 */
+	--main-color: #1ECD8C;
+	--secondary-color: #15A572;
+
+	--header-bg: #1ECD8C;
+	--header-color: #ffffff;
+	--bar-bg: #4DDBA5;
+	--menu-bg-color: #ffffff;
+	--menu-color: #5f6368;
+	--menu-color-hover: #16241F;
+	--main-menu-color: #16241F;
+	--submenu-bg-hover: #d6f6ea;
+	--submenu-bg-hover-active: #1ECD8C;
+
+	--notice-color: #0E3B2C;
+	--on-notice-color: var(--white-color);
+
+	--danger-color: var(--red-color);
+	--on-danger-color: var(--on-red-color);
+
+	--warning-color: #f0e68c;
+	--on-warning-color: var(--black-color);
+
+	--success-color: var(--green-color);
+	--on-success-color: var(--on-green-color);
+
+	--error-color: #ff0000;
+	--on-error-color: var(--white-color);
+
+	--font-body: "Microsoft Yahei", "WenQuanYi Micro Hei", "sans-serif", "Helvetica Neue", "Helvetica", "Hiragino Sans GB";
+}
