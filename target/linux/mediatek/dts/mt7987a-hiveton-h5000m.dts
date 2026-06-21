@@ -70,6 +70,18 @@
 			gpios = <&pio 4 GPIO_ACTIVE_LOW>;
 		};
 	};
+
+	/*
+	 * WED (Wireless Ethernet Dispatch) — the proprietary warp (mtk_warp)
+	 * driver requires these vendor nodes: "mediatek,wed" supplies wed_num,
+	 * "mediatek,wed0" supplies pci_slot_map. Without them mtk_warp's
+	 * wed_get_entry_num() dereferences a NULL of_node and panics, causing a
+	 * boot loop. (See &wed0 below for the wed0@15010000 override.)
+	 */
+	wed: wed {
+		compatible = "mediatek,wed";
+		wed_num = <1>;
+	};
 };
 
 /* eMMC shares pins with spi1 on MT7987; disable spi1. */
@@ -220,4 +232,16 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart0_pins>;
 	status = "okay";
+};
+
+/*
+ * Override the mainline wed0@15010000: switch its compatible to the vendor
+ * "mediatek,wed0" so the proprietary warp driver (not mainline mtk_wed)
+ * probes it, and add the pci_slot_map property warp reads. reg / interrupt
+ * are inherited from the SoC dtsi (0x15010000, GIC_SPI 205) — identical to
+ * the immortalwrt layout. "syscon" is kept for the mtk_eth wed phandle.
+ */
+&wed0 {
+	compatible = "mediatek,wed0", "syscon";
+	pci_slot_map = <0>;
 };
