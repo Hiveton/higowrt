@@ -8,7 +8,7 @@ after mount_root:
 * /etc/config		    directory with config files
 
 for more help see:
-https://openwrt.org/docs/guide-user/troubleshooting/
+https://www.higoos.cn/
 - failsafe_and_factory_reset
 - root_password_reset
 =======================================================
