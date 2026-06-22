@@ -48,6 +48,8 @@ define Package/wifi-scripts/install
 ifeq ($(CONFIG_WIFI_SCRIPTS_UCODE),y)
 	$(CP) ./files-ucode/* $(1)/
 endif
+	# HiGoWRT: /sbin/wifi 由 wifi-profile 的 wifi_jedi 提供(懂 mtwifi)
+	rm -f $(1)/sbin/wifi
 endef
 
 $(eval $(call BuildPackage,wifi-scripts))

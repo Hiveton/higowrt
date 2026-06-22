@@ -8,6 +8,7 @@ PKG_LICENSE_FILES:=
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
+CMAKE_OPTIONS += -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 include $(INCLUDE_DIR)/kernel.mk
 
 CMAKE_SOURCE_DIR:=$(PKG_BUILD_DIR)
