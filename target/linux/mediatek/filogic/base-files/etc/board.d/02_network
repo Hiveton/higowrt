@@ -10,7 +10,7 @@ mediatek_setup_interfaces()
 	case $board in
 	hiveton,h5000m|\
 	hiveton,h5000m-nand)
-		ucidef_set_interfaces_lan_wan "eth0 hnat" eth1
+		ucidef_set_interfaces_lan_wan "eth1 hnat" eth0
 		;;
 	abt,asr3000|\
 	buffalo,wsr-6000ax8|\
