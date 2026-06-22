@@ -213,6 +213,8 @@ or cmd == "reload"
 or cmd == "restart"
 or cmd == "reset" then
 	wifi(cmd, dev)
+elseif cmd == "config" then
+	wifi("up", dev)
 elseif cmd == "reload_legacy" then
 	nixio.syslog("info", "legacy command "..cmd)
 	wifi("reload", dev)
